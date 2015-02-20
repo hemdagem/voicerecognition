@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var span = document.getElementById("outputSpan");
+    var outputSpan = document.getElementById("outputSpan"), startButton = document.getElementById("startRecording"), stopButton = document.getElementById("stopRecording");
 
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
@@ -15,9 +15,17 @@
         }
 
         var currentEvent = event.results[event.results.length - 1];
-        span.innerHTML += currentEvent[0].transcript + " ";
-        
+        outputSpan.innerHTML += currentEvent[0].transcript + " ";
+
     };
-    recognition.start();
+
+    startButton.onclick = function() {
+        recognition.start();
+    };
+    
+    stopButton.onclick = function () {
+        recognition.stop();
+    };
+
 
 })();
