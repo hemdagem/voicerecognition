@@ -1,7 +1,6 @@
 ﻿(function () {
 
     var outputSpan = document.getElementById("outputSpan"), startButton = document.getElementById("startRecording"), stopButton = document.getElementById("stopRecording");
-
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.lang = "en-GB";
@@ -16,7 +15,6 @@
 
         var currentEvent = event.results[event.results.length - 1];
         outputSpan.innerHTML += currentEvent[0].transcript + " ";
-
     };
 
     startButton.onclick = function() {
@@ -25,7 +23,11 @@
     
     stopButton.onclick = function () {
         recognition.stop();
+
+        Config.Speak(outputSpan.innerHTML);
     };
+
+
 
 
 })();
