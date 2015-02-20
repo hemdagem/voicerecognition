@@ -1,8 +1,26 @@
 ﻿(function () {
 
+    var speechOutput = "";
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.lang = "en-GB";
+    
+    function returnResult(results) {
+        var currentEvent = results[results.length - 1];
+        speechOutput += currentEvent[0].transcript + " ";
+    };
+
+    function viewSpeechResults() {
+        var outputSpan = document.getElementById("outputSpan");
+        outputSpan.innerHTML = speechOutput;
+    }
+
+    function searchTotalJobs() {
+        if (speechOutput.length > 0) {
+            var keywords = encodeURI(speechOutput);
+            window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
+        }
+    }
 
     recognition.onresult = function (event) {
 
@@ -13,33 +31,20 @@
         }
 
         returnResult(event.results);
+        viewSpeechResults();
+        searchTotalJobs();
     };
-    
-    function returnResult(results) {
-        var outputSpan = document.getElementById("outputSpan");
-        var currentEvent = results[results.length - 1];
-        
-        outputSpan.innerHTML += currentEvent[0].transcript + " ";
-        
-        searchTotalJobs(outputSpan.innerHTML);
-    };
-    
-    function searchTotalJobs(keywords) {
-        if (keywords.length > 0) {
-            keywords = encodeURI(keywords);
-            window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
-        }
-    }
 
-    recognition.onerror = function(event) {
+
+    recognition.onerror = function (event) {
         console.log(event);
     };
 
-    Config.StartRecording = function() {
+    Config.StartRecording = function () {
         recognition.start();
     };
 
-    Config.StopRecording = function() {
+    Config.StopRecording = function () {
         recognition.stop();
     };
 
