@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var outputSpan = document.getElementById("outputSpan"), startButton = document.getElementById("startRecording"), stopButton = document.getElementById("stopRecording");
+    var outputSpan = document.getElementById("outputSpan");
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.lang = "en-GB";
@@ -17,13 +17,16 @@
         outputSpan.innerHTML += currentEvent[0].transcript + " ";
     };
 
-    startButton.onclick = function() {
+    recognition.onerror = function(event) {
+        console.log(event);
+    };
+
+    Config.StartRecording = function() {
         recognition.start();
     };
-    
-    stopButton.onclick = function () {
+
+    Config.StopRecording = function() {
         recognition.stop();
-        Config.Speak(outputSpan.innerHTML);
     };
 
 })();
