@@ -16,8 +16,7 @@
 
         var currentEvent = event.results[event.results.length - 1];
         span.innerHTML += currentEvent[0].transcript + " ";
-
-
+        
     };
     recognition.start();
 
