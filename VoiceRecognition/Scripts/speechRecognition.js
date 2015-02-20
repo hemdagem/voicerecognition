@@ -9,7 +9,7 @@
 
         console.log(event);
 
-        if (event.results.length == 0) {
+        if (event.results.length === 0) {
             return;
         }
 
@@ -23,11 +23,7 @@
     
     stopButton.onclick = function () {
         recognition.stop();
-
         Config.Speak(outputSpan.innerHTML);
     };
-
-
-
 
 })();
