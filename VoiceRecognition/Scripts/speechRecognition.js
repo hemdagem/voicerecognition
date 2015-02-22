@@ -4,66 +4,56 @@
     var recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.lang = "en-GB";
-
-    var dialogActive = false;
-
-    function returnResult(results) {
-        var currentEvent = results[results.length - 1];
-        speechOutput += currentEvent[0].transcript;
+    var modal = $('#myModal');
+    
+    Config.SpeechRecognition.StartRecording = function () {
+        recognition.start();
     };
 
-    function viewSpeechResults() {
-        var outputSpan = document.getElementById("outputSpan");
-        outputSpan.innerHTML = speechOutput;
+    Config.SpeechRecognition.StopRecording = function () {
+        recognition.stop();
+    };
+
+    function setResult(results) {
+        if (results.length > 0) {
+            var currentEvent = results[results.length - 1];
+            speechOutput += currentEvent[0].transcript;
+        }
+    };
+
+    function speechResults() {
+        $("#outputSpan").html(speechOutput);
     }
 
-    function searchTotalJobs() {
+    function search() {
         if (speechOutput.length > 0) {
             var keywords = encodeURI(speechOutput);
-            Config.StopRecording();
+            Config.SpeechRecognition.StopRecording();
             window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
-            $('#myModal').modal('hide');
+            modal.modal('hide');
         }
     }
 
     function launchDialog() {
-        $('#myModal').modal('show');
+        modal.modal('show');
         speechOutput = "";
-        dialogActive = true;
     }
 
     recognition.onresult = function (event) {
+        setResult(event.results);
 
-        console.log(event);
-        
-        if (event.results.length === 0) {
-            return;
-        }
-
-        returnResult(event.results);
-
-        if (dialogActive === false && speechOutput === "total jobs") {
+        if (modal.hasClass("in") === false && speechOutput === "total jobs") {
             launchDialog();
             return;
         }
 
-        viewSpeechResults();
-        searchTotalJobs();
+        speechResults();
+        search();
     };
-
 
     recognition.onerror = function (event) {
         console.log(event);
     };
 
-    Config.StartRecording = function () {
-        recognition.start();
-    };
-
-    Config.StopRecording = function () {
-        recognition.stop();
-    };
-    
-    Config.StartRecording();
-
+    Config.SpeechRecognition.StartRecording();
 })();
