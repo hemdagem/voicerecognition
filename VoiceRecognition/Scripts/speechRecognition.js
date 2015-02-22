@@ -5,7 +5,7 @@
     recognition.continuous = true;
     recognition.lang = "en-GB";
     var modal = $('#myModal');
-    
+
     Config.SpeechRecognition.StartRecording = function () {
         recognition.start();
     };
@@ -47,8 +47,11 @@
             return;
         }
 
-        speechResults();
-        search();
+        if (modal.hasClass("in")) {
+            speechResults();
+            search();
+        }
+
     };
 
     recognition.onerror = function (event) {
