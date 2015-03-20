@@ -1,62 +1,79 @@
 ﻿(function () {
 
-    var speechOutput = "";
-    var recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.lang = "en-GB";
-    var modal = $('#myModal');
+	var speechOutput = "";
+	var recognition = new webkitSpeechRecognition();
+	recognition.continuous = false;
+	recognition.interimResults = false;
+	recognition.lang = "en-GB";
+	var modal = $("#myModal");
 
-    Config.SpeechRecognition.StartRecording = function () {
-        recognition.start();
-    };
+	var actions = {
+		profile: "my profile",
+		JobsByEmail: "create jbe"
+	}
 
-    Config.SpeechRecognition.StopRecording = function () {
-        recognition.stop();
-    };
+	function launchDialog() {
+		modal.modal("show");
+		speechOutput = "";
+		$("#outputSpan").html("");
+	}
 
-    function setResult(results) {
-        if (results.length > 0) {
-            var currentEvent = results[results.length - 1];
-            speechOutput += currentEvent[0].transcript;
-        }
-    };
+	Config.SpeechRecognition.StartRecording = function () {
+		launchDialog();
+		recognition.start();
+	};
 
-    function speechResults() {
-        $("#outputSpan").html(speechOutput);
-    }
+	Config.SpeechRecognition.StopRecording = function () {
+		recognition.stop();
+	};
 
-    function search() {
-        if (speechOutput.length > 0) {
-            var keywords = encodeURI(speechOutput);
-            Config.SpeechRecognition.StopRecording();
-            window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
-            modal.modal('hide');
-        }
-    }
+	function setResult(results) {
+		if (results.length > 0) {
+			var currentEvent = results[results.length - 1];
+			speechOutput += currentEvent[0].transcript;
+		}
+	};
 
-    function launchDialog() {
-        modal.modal('show');
-        speechOutput = "";
-    }
+	function speechResults() {
+		$("#outputSpan").html(speechOutput);
+	}
 
-    recognition.onresult = function (event) {
-        setResult(event.results);
+	function search() {
+		if (speechOutput.length > 0) {
+			var keywords = encodeURI(speechOutput);
+			window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
+		}
+	}
 
-        if (modal.hasClass("in") === false && speechOutput === "total jobs") {
-            launchDialog();
-            return;
-        }
+	function goToMyProfile() {
+		window.open("http://www.totaljobs.com/Authenticated/Default.aspx");
+	}
 
-        if (modal.hasClass("in")) {
-            speechResults();
-            search();
-        }
+	function goToJobsByEmail() {
+		window.open("http://www.totaljobs.com/JobSearch/JobsByEmailSetup.aspx");
+	}
 
-    };
+	recognition.onresult = function (event) {
+		setResult(event.results);
 
-    recognition.onerror = function (event) {
-        console.log(event);
-    };
+		speechResults();
 
-    Config.SpeechRecognition.StartRecording();
+		if (speechOutput === actions.profile) {
+			goToMyProfile();
+		}
+		else if (speechOutput === actions.JobsByEmail) {
+			goToJobsByEmail();
+		} else {
+			search();
+		}
+		Config.SpeechRecognition.StopRecording();
+		modal.modal("hide");
+
+	};
+
+	recognition.onerror = function (event) {
+		console.log(event);
+	};
+
+
 })();

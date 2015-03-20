@@ -1,30 +1,29 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+	ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
-@*<button id="startRecording" onclick="Config.SpeechRecognition.StartRecording()">Start Recording</button>
-    <button id="stopRecording" onclick="Config.SpeechRecognition.StopRecording()">Stop Recording</button>*@
+<button id="startRecording" onclick="Config.SpeechRecognition.StartRecording()">Start Recording</button>
+<button id="stopRecording" onclick="Config.SpeechRecognition.StopRecording()">Stop Recording</button>
 
 
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Search for jobs</h4>
-            </div>
-            <div class="modal-body">
-                Say the keyword for the job you want to search
-                <img src="~/Content/zWRxboG.gif" />
-                <span id="outputSpan"></span>
-            </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Search for jobs</h4>
+			</div>
+			<div class="modal-body">
+				Say the keyword for the job you want to search
+				<img src="~/Content/zWRxboG.gif" />
+				<span id="outputSpan"></span>
+			</div>
 
-        </div>
-    </div>
+		</div>
+	</div>
 </div>
 
 
