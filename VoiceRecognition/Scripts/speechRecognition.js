@@ -5,6 +5,8 @@
 	recognition.continuous = false;
 	recognition.interimResults = false;
 	recognition.lang = "en-GB";
+	var recordingIcon = document.getElementsByClassName("recording-icon")[0];
+	var resultSpan = document.getElementById("speechSearchResult");
 
 	var actions = {
 		profile: "my profile",
@@ -13,7 +15,7 @@
 
 	Config.SpeechRecognition.StartRecording = function () {
 		recognition.start();
-		$(".recording-icon").show();
+		recordingIcon.style.display = "block";
 	};
 
 	Config.SpeechRecognition.StopRecording = function () {
@@ -24,8 +26,7 @@
 		if (results.length > 0) {
 			var currentEvent = results[results.length - 1];
 			speechOutput += currentEvent[0].transcript.toLowerCase();
-
-			$("#outputSpan").html(speechOutput);
+			resultSpan.innerHTML = speechOutput;
 		}
 	};
 
@@ -65,11 +66,15 @@
 	};
 
 	recognition.onerror = function (event) {
-		console.log(event);
+		resultSpan.innerHTML = event.error;
 	};
 
 	recognition.onend = function () {
-		$(".recording-icon").hide();
+		recordingIcon.style.display = "none";
+	}
+
+	recognition.onnomatch = function () {
+		resultSpan.innerHTML = "No match found. Please try again";
 	}
 
 })();
