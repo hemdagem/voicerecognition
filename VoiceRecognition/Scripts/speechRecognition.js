@@ -5,22 +5,15 @@
 	recognition.continuous = false;
 	recognition.interimResults = false;
 	recognition.lang = "en-GB";
-	var modal = $("#myModal");
 
 	var actions = {
 		profile: "my profile",
 		JobsByEmail: "jobs by e-mail"
 	}
 
-	function launchDialog() {
-		modal.modal("show");
-		speechOutput = "";
-		$("#outputSpan").html("");
-	}
-
 	Config.SpeechRecognition.StartRecording = function () {
-		launchDialog();
 		recognition.start();
+		$(".recording-icon").show();
 	};
 
 	Config.SpeechRecognition.StopRecording = function () {
@@ -52,7 +45,6 @@
 	}
 
 	function handleResult() {
-
 		if (speechOutput === actions.profile) {
 			goToMyProfile();
 		}
@@ -70,12 +62,14 @@
 		handleResult();
 
 		Config.SpeechRecognition.StopRecording();
-		modal.modal("hide");
-
 	};
 
 	recognition.onerror = function (event) {
 		console.log(event);
 	};
+
+	recognition.onend = function () {
+		$(".recording-icon").hide();
+	}
 
 })();
