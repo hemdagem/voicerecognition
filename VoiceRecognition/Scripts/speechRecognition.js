@@ -1,6 +1,5 @@
 ﻿(function () {
 
-	var speechOutput = "";
 	var recognition = new webkitSpeechRecognition();
 	recognition.continuous = false;
 	recognition.interimResults = false;
@@ -22,19 +21,19 @@
 		recognition.stop();
 	};
 
-	function setResult(results) {
+	function getResult(results) {
+		var speechOutput = "";
 		if (results.length > 0) {
 			var currentEvent = results[results.length - 1];
-			speechOutput += currentEvent[0].transcript.toLowerCase();
+			speechOutput = currentEvent[0].transcript.toLowerCase();
+
 			resultSpan.innerHTML = speechOutput;
 		}
+		return speechOutput;
 	};
 
-	function search() {
-		if (speechOutput.length > 0) {
-			var keywords = encodeURI(speechOutput);
-			window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + keywords);
-		}
+	function search(keywords, location) {
+		window.open("http://www.totaljobs.com/JobSearch/Results.aspx?Keywords=" + encodeURI(keywords) + "&LTxt=" + encodeURI(location));
 	}
 
 	function goToMyProfile() {
@@ -45,7 +44,45 @@
 		window.open("http://www.totaljobs.com/JobSearch/JobsByEmailSetup.aspx");
 	}
 
-	function handleResult() {
+	function parseKeywords(speechOutput) {
+		if (speechOutput.length > 0) {
+
+			var keywords = "";
+			var location = "";
+			if (speechOutput.indexOf("keyword") > 0 || speechOutput.indexOf("location") > 0) {
+				var splittedOutted = speechOutput.split(" ");
+				var type = "";
+				for (var i = 0; i < splittedOutted.length; i++) {
+					var word = splittedOutted[i];
+
+					if (word === "location") {
+						type = "location";
+						continue;
+					}
+
+					if (word === "keyword") {
+						type = "keyword";
+						continue;
+					}
+
+					if (type === "location") {
+						location += " " + word;
+					}
+
+					if (type === "keyword" || type === "") {
+						keywords += " " + word;
+					}
+				}
+
+			} else {
+				keywords = speechOutput;
+			}
+
+			search(keywords, location);
+		}
+	}
+
+	function handleResult(speechOutput) {
 		if (speechOutput === actions.profile) {
 			goToMyProfile();
 		}
@@ -53,14 +90,14 @@
 			goToJobsByEmail();
 		}
 		else {
-			search();
+			parseKeywords(speechOutput);
 		}
 	}
 
 	recognition.onresult = function (event) {
-		setResult(event.results);
+		var speechOutput = getResult(event.results);
 
-		handleResult();
+		handleResult(speechOutput);
 
 		Config.SpeechRecognition.StopRecording();
 	};
