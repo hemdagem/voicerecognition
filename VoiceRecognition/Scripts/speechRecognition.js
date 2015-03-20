@@ -31,12 +31,10 @@
 		if (results.length > 0) {
 			var currentEvent = results[results.length - 1];
 			speechOutput += currentEvent[0].transcript.toLowerCase();
+
+			$("#outputSpan").html(speechOutput);
 		}
 	};
-
-	function speechResults() {
-		$("#outputSpan").html(speechOutput);
-	}
 
 	function search() {
 		if (speechOutput.length > 0) {
@@ -53,10 +51,7 @@
 		window.open("http://www.totaljobs.com/JobSearch/JobsByEmailSetup.aspx");
 	}
 
-	recognition.onresult = function (event) {
-		setResult(event.results);
-
-		speechResults();
+	function handleResult() {
 
 		if (speechOutput === actions.profile) {
 			goToMyProfile();
@@ -67,6 +62,12 @@
 		else {
 			search();
 		}
+	}
+
+	recognition.onresult = function (event) {
+		setResult(event.results);
+
+		handleResult();
 
 		Config.SpeechRecognition.StopRecording();
 		modal.modal("hide");
@@ -76,6 +77,5 @@
 	recognition.onerror = function (event) {
 		console.log(event);
 	};
-
 
 })();
