@@ -9,7 +9,7 @@
 
 	var actions = {
 		profile: "my profile",
-		JobsByEmail: "create jbe"
+		JobsByEmail: "jobs by e-mail"
 	}
 
 	function launchDialog() {
@@ -30,7 +30,7 @@
 	function setResult(results) {
 		if (results.length > 0) {
 			var currentEvent = results[results.length - 1];
-			speechOutput += currentEvent[0].transcript;
+			speechOutput += currentEvent[0].transcript.toLowerCase();
 		}
 	};
 
@@ -63,9 +63,11 @@
 		}
 		else if (speechOutput === actions.JobsByEmail) {
 			goToJobsByEmail();
-		} else {
+		}
+		else {
 			search();
 		}
+
 		Config.SpeechRecognition.StopRecording();
 		modal.modal("hide");
 
